@@ -1,0 +1,21 @@
+Package: BayesCER
+Type: Package
+Title: Bayesian generalized Centered Erdős–Rényi model
+Version: 0.1.0
+Author: Francesco Barile
+Maintainer: Francesco Barile <francesco.barile@unimib.it>
+Description: This package provides efficient C++ functions for the MLE of the 
+             alpha parameter in a CER-gCER model.
+             I need another sentence.
+License: LGPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 1.0.14), RcppArmadillo, RcppParallel, igraph
+LinkingTo: Rcpp, RcppArmadillo, RcppParallel, igraph
+Depends: 
+    R (>= 3.5)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.3.2

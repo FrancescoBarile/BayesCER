@@ -1,0 +1,276 @@
+---
+title: "Simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+ fig.align = "center",
+ fig.width = 7,
+fig.height = 5
+)
+```
+
+```{r setup}
+library(BayesCER)
+library(tidyverse)
+
+data("sim_data_result", package = "BayesCER")
+```
+
+```{r, include=FALSE}
+N_vec <- c(10)
+alpha_vec <- c(0.2)
+```
+
+## Simulation study
+
+We compare the empirical Bayes and Gibbs sampling approaches implemented in
+`BayesCER`. The simulation results are precomputed and included with the
+package, so that the simulations do not need to be
+rerun when building the vignette.
+
+The performance of the two approaches is assessed in terms of the estimation
+error for the representative graph and the scale parameter, as well as the
+accuracy of graph-level summary statistics.
+
+
+```{r normalized Hamming error for C}
+ggplot(
+  sim_data_result,
+  aes(
+    x = as.factor(n),
+    y = discrepancy_C_hat_norm,
+    fill = method
+  )
+) +
+  geom_boxplot(
+    aes(colour = after_scale(colorspace::darken(fill, 0.2))),
+    position = position_dodge(width = 0.8),
+    outlier.shape = NA,
+    linewidth = 0.3,
+    show.legend = c(colour = FALSE, fill = TRUE)
+  ) +
+  stat_boxplot(
+    aes(colour = method),
+    geom = "errorbar",
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    show.legend = FALSE
+  ) +
+  stat_summary(
+    fun = median,
+    geom = "point",
+    position = position_dodge(width = 0.8),
+    size = 1.2,
+    colour = "black",
+    show.legend = FALSE
+  ) +
+  labs(
+    x = "Sample size n",
+    y = "",
+    fill = "Method",
+     title = bquote(
+    "Normalized Hamming error " ~ d[H](C, hat(C))/M ~
+    " for " ~ N == .(N_vec) ~ " and " ~ alpha == .(alpha_vec)
+  )
+    # title = paste0(
+    #   expression("Normalized Hamming error " ~ d[H](C, hat(C))/M), 
+    #   "for N = ", N_vec, "and ", expression(alpha), " = ",  alpha_vec)
+  ) +
+  theme_bw() +
+  theme(
+    panel.spacing.x = unit(0, "mm"),
+    plot.margin = margin(rep(1, 4), unit = "mm"),
+    strip.text = element_text(size = 14),
+    axis.text = element_text(size = 14),
+    strip.text.y.right = element_text(size = 14),
+    strip.text.x.top = element_text(size = 14),
+    axis.title.x = element_text(size = 14)
+  )
+```
+
+```{r absolute error for alpha }
+ggplot(
+  sim_data_result,
+  aes(
+    x = as.factor(n),
+    y = discrepancy_alpha_hat,
+    fill = method
+  )
+) +
+  geom_boxplot(
+    aes(colour = after_scale(colorspace::darken(fill, 0.2))),
+    position = position_dodge(width = 0.8),
+    outlier.shape = NA,
+    linewidth = 0.3,
+    show.legend = c(colour = FALSE, fill = TRUE)
+  ) +
+  stat_boxplot(
+    aes(colour = method),
+    geom = "errorbar",
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    show.legend = FALSE
+  ) +
+  stat_summary(
+    fun = median,
+    geom = "point",
+    position = position_dodge(width = 0.8),
+    size = 1.2,
+    colour = "black",
+    show.legend = FALSE
+  ) +
+  labs(
+    title = bquote(
+    "Absolute error " ~ abs(alpha - hat(alpha)) ~
+    " for " ~ N == .(N_vec) ~ " and " ~ alpha == .(alpha_vec)),
+    x = "Sample size n",
+    y = "",
+    fill = "Method"
+  ) +
+  theme_bw() +
+  theme(
+    panel.spacing.x = unit(0, "mm"),
+    plot.margin = margin(rep(1, 4), unit = "mm"),
+    strip.text = element_text(size = 14),
+    axis.text = element_text(size = 14),
+    strip.text.y.right = element_text(size = 14),
+    strip.text.x.top = element_text(size = 14),
+    axis.title.x = element_text(size = 14)
+  )
+```
+```{r ecc }
+ggplot(
+  sim_data_result,
+  aes(
+    x = as.factor(n),
+    y = ecc_hat,
+    fill = method
+  )) +
+  geom_boxplot(
+    aes(colour = after_scale(colorspace::darken(fill, 0.2))),
+    position = position_dodge(width = 0.8),
+    outlier.shape = NA,
+    # colour = NA,
+    linewidth = 0.3,
+    show.legend = c(colour = FALSE, fill = TRUE)
+  ) +
+  stat_boxplot(
+    aes(colour = method),
+    geom = "errorbar",
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    show.legend = FALSE
+  ) +
+  stat_summary(
+    fun = median,
+    geom = "point",
+    position = position_dodge(width = 0.8),
+    size = 1.2,
+    colour = "black",
+    show.legend = FALSE
+  ) +
+  geom_hline(
+  aes(
+    yintercept = ecc_true,
+    linetype = "True value",
+    colour = "True value"
+  )
+) +
+scale_linetype_manual(
+  name = NULL,
+  values = c("True value" = "dashed")
+) +
+scale_colour_manual(
+  values = c("True value" = "black"),
+  guide = "none"
+) +
+  labs(
+    title = bquote(
+    "Approximate expected clustering coefficient" ~
+    " for " ~ N == .(N_vec) ~ " and " ~ alpha == .(alpha_vec)),
+    x = "Sample size n", y = "", fill = "Method") +
+  theme_bw() +
+  theme(
+    panel.spacing.x = unit(0, "mm"),
+    plot.margin = margin(rep(1,4), unit="mm"),
+    strip.text = element_text(size=14),
+    axis.text = element_text(size=14),
+    strip.text.y.right  = element_text(size = 14),
+    strip.text.x.top    = element_text(size = 14),
+    axis.title.x = element_text(size = 14)
+  )
+```
+
+```{r eed }
+ggplot(
+  sim_data_result,
+  aes(
+    x = as.factor(n),
+    y = total_degree_norm,
+    fill = method
+  )) +
+  geom_boxplot(
+    aes(colour = after_scale(colorspace::darken(fill, 0.2))),
+    position = position_dodge(width = 0.8),
+    outlier.shape = NA,
+    # colour = NA,
+    linewidth = 0.3,
+    show.legend = c(colour = FALSE, fill = TRUE)
+  ) +
+  stat_boxplot(
+    aes(colour = method),
+    geom = "errorbar",
+    position = position_dodge(width = 0.8),
+    width = 0.2,
+    show.legend = FALSE
+  ) +
+  stat_summary(
+    fun = median,
+    geom = "point",
+    position = position_dodge(width = 0.8),
+    size = 1.2,
+    colour = "black",
+    show.legend = FALSE
+  ) +
+  geom_hline(
+  aes(
+    yintercept = total_degree_true_norm,
+    linetype = "True value",
+    colour = "True value"
+  )
+) +
+scale_linetype_manual(
+  name = NULL,
+  values = c("True value" = "dashed")
+) +
+scale_colour_manual(
+  values = c("True value" = "black"),
+  guide = "none"
+) +
+  labs(
+    title = bquote(
+    "Expected edge density" ~
+    " for " ~ N == .(N_vec) ~ " and " ~ alpha == .(alpha_vec)),
+    x = "Sample size n", y = "", fill = "Method") +
+  theme_bw() +
+  theme(
+    panel.spacing.x = unit(0, "mm"),
+    plot.margin = margin(rep(1,4), unit="mm"),
+    strip.text = element_text(size=14),
+    axis.text = element_text(size=14),
+    strip.text.y.right  = element_text(size = 14),
+    strip.text.x.top    = element_text(size = 14),
+    axis.title.x = element_text(size = 14)
+  )
+```
+
