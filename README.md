@@ -23,7 +23,14 @@ Once the code has been executed, run the following script to reproduce the plots
 source("reproduction/plots.R")
 ```
 A subset of the simulation results is precomputed and included with the package for illustration in the vignette. This avoids rerunning the simulations when building the vignette.
-
+To load the simulation results run:
 ```r
 data("sim_data_result", package = "BayesCER")
 ```
+
+To view the vignette, download the HTML file and open it in a web browser, or run:
+
+```r
+browseURL("doc/Simulation.html")
+```
+
