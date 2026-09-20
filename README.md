@@ -8,7 +8,7 @@ The repository provides an example illustrating part of the simulation study pre
 
 Before running the code, please install the **BayesCER** package from the repository.
 
-## Running the Example
+## Reproduction code
 
 Once the package has been installed, run the following script from the root directory of the repository:
 
@@ -22,6 +22,9 @@ Once the code has been executed, run the following script to reproduce the plots
 ```r
 source("reproduction/plots.R")
 ```
+
+## Running the Example
+
 A subset of the simulation results is precomputed and included with the package for illustration in the vignette. This avoids rerunning the simulations when building the vignette.
 To load the simulation results run:
 ```r
