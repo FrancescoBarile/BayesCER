@@ -20,7 +20,7 @@ The script runs the simulation study described in the article. The complete simu
 Once the code has been executed, run the following script to reproduce the plots showed in the article.
 
 ```r
-source("data-raw/plots.R")
+source("reproduction/plots.R")
 ```
 A subset of the simulation results is precomputed and included with the package for illustration in the vignette. This avoids rerunning the simulations when building the vignette.
 
