@@ -93,7 +93,7 @@ pp1 <- ggplot(
   output_df_long %>% filter(alpha==0.2),
   aes(
     x = as.factor(n),
-    y = total_degree_norm,
+    y = density,
     fill = method
   )
 ) +
@@ -129,7 +129,7 @@ pp1 <- ggplot(
     )
   ) +
   geom_hline(
-    aes(yintercept = total_degree_true_norm),
+    aes(yintercept = density_true),
     colour = "black",
     linetype = "dashed"
   ) +
@@ -211,7 +211,7 @@ pp <- ggplot(
   output_df_long,
   aes(
     x = as.factor(n),
-    y = discrepancy_C_hat_norm,
+    y = discrepancy_C_hat,
     fill = method
   )
 ) +
@@ -410,7 +410,7 @@ pp <- ggplot(
   output_df_long %>% filter(alpha!=0.2),
   aes(
     x = as.factor(n),
-    y = total_degree_norm,
+    y = density,
     fill = method
   )) +
   geom_boxplot(
@@ -446,7 +446,7 @@ pp <- ggplot(
     )
   ) +
   geom_hline(
-    aes(yintercept = total_degree_true_norm),
+    aes(yintercept = density_true),
     colour = "black",
     linetype = "dashed"
   ) +

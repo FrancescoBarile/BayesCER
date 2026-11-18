@@ -48,7 +48,7 @@ ggplot(
   sim_data_result,
   aes(
     x = as.factor(n),
-    y = discrepancy_C_hat_norm,
+    y = discrepancy_C_hat,
     fill = method
   )
 ) +
@@ -216,7 +216,7 @@ ggplot(
   sim_data_result,
   aes(
     x = as.factor(n),
-    y = total_degree_norm,
+    y = density,
     fill = method
   )) +
   geom_boxplot(
@@ -244,7 +244,7 @@ ggplot(
   ) +
   geom_hline(
   aes(
-    yintercept = total_degree_true_norm,
+    yintercept = density_true,
     linetype = "True value",
     colour = "True value"
   )

@@ -23,21 +23,41 @@ mcmc_options=list( n_iter=n_iter, burnin=burnin, thinning=thinning  )
 N_rep = 100
 
 
+set.seed(1)
+all_seeds <- sample.int(
+  .Machine$integer.max,
+  nrow(scenario_mat)
+)
+
+set.seed(2)
+seed_array <- array(
+  sample.int(.Machine$integer.max,
+             nrow(scenario_mat) * length(n_vec) * N_rep),
+  dim = c(nrow(scenario_mat), length(n_vec), N_rep)
+)
+
 n_cores = max( (1:detectCores())[ N_rep %% (1:detectCores())==0 ] )
 
-out_path = paste0(getwd(), "/data")
+
+project_path = getwd()
+
+out_path = paste0(project_path, "/data")
+if (!dir.exists( out_path )) {
+  dir.create(out_path)
+}
 
 folder_out <- paste0(out_path, "/output")
 if (!dir.exists( folder_out )) {
   dir.create(folder_out)
 }
 
-myCluster <- makeCluster(n_cores,
-                         type = "PSOCK")
-registerDoParallel(myCluster)
+myCluster <- makeCluster(n_cores, type = "PSOCK")
 
-set.seed(1)
+st_all <- Sys.time()
+registerDoParallel(myCluster)
 for( s in 1:nrow(scenario_mat)){
+
+  set.seed(all_seeds[s])
 
   N = scenario_mat[s,1]
   M = choose(N,2)
@@ -49,13 +69,16 @@ for( s in 1:nrow(scenario_mat)){
   prior_list=list(W=W, n_0=n_0, a=a, b=b)
 
   # DGP centroid
-  C_mat = generate_sbm_fast(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
+  C_mat = BayesCER::generate_sbm_fast(N, K = 2,
+                                      intra_prob = 0.8, inter_prob = 0.1,
                             z = sample(seq_len(K), N, TRUE))
-  C = from_full_adj_to_low_adj(C_mat)
+  C = BayesCER:::from_full_adj_to_low_adj(C_mat)
 
   # ECC DGP distribution
-  ecc_true = expected_transitivity_CER_approx_cpp(alpha, C_mat)
-  total_degree_true = M * alpha + sum(C) * ( 1 - 2*alpha )
+  summary_C = BayesCER::exact_graph_stats(C)
+
+  ecc_true = clustering(alpha, edges = summary_C[1], d2 = summary_C[2],  summary_C[3], N)
+  density_true = (M * alpha + sum(C) * ( 1 - 2*alpha ) )/M
 
   for( n in n_vec ){
 
@@ -70,12 +93,15 @@ for( s in 1:nrow(scenario_mat)){
     }
 
     foreach(r = 1:N_rep,
-            .packages = c("BayesCER")
+            .packages = c("Rcpp","BayesCER")
     ) %dopar% {
+
+      seed_snr = seed_array[s, which(n_vec == n), r]
+      set.seed(seed_snr)
 
       # generate synthetic data
       st <- Sys.time()
-      G_sum <- rmvbern_CER_sum(n, C, alpha)
+      G_sum <- as.integer(rbinom(M,n,alpha+(1-2*alpha)*C))
       G_bar <- G_sum/n
       en <- Sys.time()
       time_start_rgen = st
@@ -85,7 +111,7 @@ for( s in 1:nrow(scenario_mat)){
       # Inference
       # EB inference
       st <- Sys.time()
-      eb_infer = gCER_inference(G_bar, n, prior_list=prior_list,
+      eb_infer = gCER_inference(G_sum, n, prior_list=prior_list,
                                 mcmc=F,
                                 parallel=F)
       en <- Sys.time()
@@ -97,33 +123,36 @@ for( s in 1:nrow(scenario_mat)){
       C_hat = eb_infer$C_hat
       alpha_hat = eb_infer$alpha_hat
 
-      discrepancy_C_hat_EB     = sum(abs(C_hat-C))
+      discrepancy_C_hat_EB     = sum(abs(C_hat-C))/M
       discrepancy_alpha_hat_EB = abs(alpha_hat-alpha)
 
       ecc_hat_EB      = eb_infer$ecc
-      total_degree_EB = eb_infer$total_degree
+      density_EB = eb_infer$density
 
       #Gibbs
       st <- Sys.time()
-      gibbs_infer = gCER_inference(G_bar, n, prior_list=prior_list, mcmc=T,
+      gibbs_infer = gCER_inference(G_sum, n, prior_list=prior_list, mcmc=T,
                                    mcmc_options=mcmc_options,
-                                   parallel=F)
+                                   parallel=F,
+                                   seed = seed_snr)
       en <- Sys.time()
 
       time_start_gibbs = st
       time_end_gibbs   = en
       time_gibbs       = c(time_start_gibbs, time_end_gibbs)
 
-      discrepancy_C_hat_gibbs     = sum(abs(gibbs_infer$n_iter*gibbs_infer$C_mean - gibbs_infer$n_iter*C))/gibbs_infer$n_iter
-      discrepancy_alpha_hat_gibbs = mean(abs( gibbs_infer$alpha_chain - alpha ))
+      C_gibbs = as.integer(gibbs_infer$C_mean>=.5)
+      alpha_gibbs = mean(gibbs_infer$alpha_chain)
+      discrepancy_C_hat_gibbs     = sum(abs(C_gibbs-C))/M
+      discrepancy_alpha_hat_gibbs = abs(alpha_gibbs-alpha)
 
-      ecc_hat_gibbs      = mean(gibbs_infer$ecc_dist)
-      total_degree_gibbs = mean(gibbs_infer$total_degree_dist)
+      ecc_hat_gibbs = mean(gibbs_infer$ecc_dist)
+      density_gibbs = mean(gibbs_infer$density_dist)
 
       temp = list( n = n, N=N, alpha=alpha, rep = r,
 
                    ecc_true=ecc_true,
-                   total_degree_true=total_degree_true,
+                   density_true=density_true,
 
                    time_EB=time_EB, time_gibbs=time_gibbs, time_rgen=time_rgen,
 
@@ -136,8 +165,8 @@ for( s in 1:nrow(scenario_mat)){
                    ecc_hat_EB=ecc_hat_EB,
                    ecc_hat_gibbs=ecc_hat_gibbs,
 
-                   total_degree_EB=total_degree_EB,
-                   total_degree_gibbs=total_degree_gibbs
+                   density_EB=density_EB,
+                   density_gibbs=density_gibbs
       )
 
       saveRDS(temp, paste0(folder, "/n_", n,
@@ -154,7 +183,8 @@ for( s in 1:nrow(scenario_mat)){
   }
 }
 stopCluster(myCluster)
-
+en_all <- Sys.time()
+en_all - st_all
 
 output_path = folder_out
 
@@ -178,15 +208,15 @@ for( fo in 1:length(output_folders) ){
                          starting_time_rgen  = output_fi$time_rgen[1],
                          ending_time_rgen    = output_fi$time_rgen[2],
                          ecc_true            = output_fi$ecc_true,
-                         total_degree_true            = output_fi$total_degree_true,
+                         density_true                 = output_fi$density_true,
                          discrepancy_C_hat_EB         = output_fi$discrepancy_C_hat_EB,
                          discrepancy_C_hat_gibbs      = output_fi$discrepancy_C_hat_gibbs,
                          discrepancy_alpha_hat_EB     = output_fi$discrepancy_alpha_hat_EB,
                          discrepancy_alpha_hat_gibbs  = output_fi$discrepancy_alpha_hat_gibbs,
                          ecc_hat_EB                   = output_fi$ecc_hat_EB,
                          ecc_hat_gibbs                = output_fi$ecc_hat_gibbs,
-                         total_degree_EB              = output_fi$total_degree_EB,
-                         total_degree_gibbs           = output_fi$total_degree_gibbs
+                         density_EB                   = output_fi$density_EB,
+                         density_gibbs                = output_fi$density_gibbs
     )
 
     output_df = rbind(output_df,  temp_df)
@@ -198,9 +228,8 @@ for( fo in 1:length(output_folders) ){
 library(tidyverse)
 output_df_long <- output_df |>
   pivot_longer(
-    cols = -c(n , N, alpha, rep, ecc_true, total_degree_true
-              ,starting_time_rgen,
-              ending_time_rgen
+    cols = -c(n , N, alpha, rep, ecc_true, density_true,
+              starting_time_rgen, ending_time_rgen
     ),
     names_to = c(".value", "method_temp"),
     names_pattern = "(.*)_(EB|gibbs)"
@@ -209,17 +238,10 @@ output_df_long <- output_df |>
   select(-method_temp) %>%
   relocate(method, .after = ending_time)
 
-output_df_long <- output_df_long %>% mutate( M=choose(N,2),
-                                             discrepancy_C_hat_norm = discrepancy_C_hat/M,
-                                             total_degree_norm = total_degree/M,
-                                             total_degree_true_norm = total_degree_true/M
-) %>%
-  relocate(M, .after = N) %>%
-  relocate(discrepancy_C_hat_norm, .after = discrepancy_C_hat) %>%
-  relocate(total_degree_true_norm, .after = total_degree_true) %>%
-  relocate(total_degree_norm, .after = total_degree)
 
 saveRDS(output_df_long,
         paste0(out_path, "/output_df_long.rds")
 )
+
+
 

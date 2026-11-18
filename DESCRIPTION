@@ -1,7 +1,7 @@
 Package: BayesCER
 Type: Package
 Title: Bayesian generalized Centered Erdős–Rényi model
-Version: 0.1.0
+Version: 0.1.1
 Author: Francesco Barile
 Maintainer: Francesco Barile <francesco.barile@unimib.it>
 Description: This package provides efficient C++ functions for the MLE of the 
@@ -10,12 +10,14 @@ Description: This package provides efficient C++ functions for the MLE of the
 License: LGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Imports: Rcpp (>= 1.0.14), RcppArmadillo, RcppParallel, igraph
-LinkingTo: Rcpp, RcppArmadillo, RcppParallel, igraph
+Imports: Rcpp (>= 1.0.14), igraph
+LinkingTo: Rcpp, RcppArmadillo, RcppParallel
 Depends: 
     R (>= 3.5)
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyverse,
+    colorspace
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2

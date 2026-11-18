@@ -5,20 +5,21 @@
 \title{Generalized CER model inference}
 \usage{
 gCER_inference(
-  G_bar,
+  G_sum,
   n,
   prior_list = list(W = 1/2, n_0 = 1, a = 1, b = 1),
   mcmc = FALSE,
   mcmc_options = list(n_iter = 1000, burnin = 0, thinning = 1),
-  parallel = TRUE
+  parallel = TRUE,
+  seed = 123456
 )
 }
 \arguments{
-\item{G_bar}{[numeric vector] M-dimensional vector containing the edge-wise
-sample means of the observed graphs, where M = N(N - 1)/2. The entries encode
-the lower triangular part of the edge-by-edge average of the adjacency matrices
+\item{G_sum}{[numeric vector] M-dimensional vector containing the edge-wise
+sample sums of the observed graphs, where M = N(N - 1)/2. The entries encode
+the lower triangular part of the edge-by-edge sum of the adjacency matrices
 of the observed graphs of $G^{(1:n)}$,
-\eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
+\eqn{n \times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 a Centered Erdős–Rényi (CER) distribution.}
 
 \item{n}{[integer] The sample size.}
@@ -40,6 +41,8 @@ MCMC. If \code{FALSE}, an empirical Bayes inferential approach is used.}
 
 \item{parallel}{[logical] If \code{TRUE}, parallel computation is used from
 the EB method to maximize the marginal likelihood w.r.t. alpha.}
+
+\item{seed}{[numeric] The seed to set to run the Gibbs sampler}
 }
 \value{
 [list] A list containing the inferential output.

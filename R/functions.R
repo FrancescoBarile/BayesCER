@@ -2,7 +2,6 @@
 #' @param low_adj [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 #'
 #' @return [matrix] N x N binary matrix encoding the adjacency matrix associated to a graph.
-#' @export
 from_low_adj_to_full_adj<-function(low_adj){
   M<-length(low_adj)
   N<-(1+sqrt(1+8*M))/2
@@ -19,7 +18,6 @@ from_low_adj_to_full_adj<-function(low_adj){
 #' @param full_adj [matrix] N \times N matrix encoding the adjacency matrix associated to a graph.
 #'
 #' @return [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
-#' @export
 
 from_full_adj_to_low_adj<-function(full_adj){
   low_adj<-t(full_adj)[lower.tri(t(full_adj))]
@@ -83,6 +81,7 @@ generate_sbm <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1) {
 #' @param inter_prob [numeric] Probability of edges between blocks.
 #'
 #' @return [matrix] N \times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
+#' @importFrom stats runif
 #' @export
 generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
                               z = sample(seq_len(K), N, TRUE)) {
@@ -125,7 +124,6 @@ generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
 #' of the transformation and interpreted as prior sample size.
 #'
 #' @return [numeric] The value of \eqn{\tau(\alpha,n_0)}.
-#' @export
 tau_alpha <- function(alpha, n_0){
   out <- ( (alpha)^n_0 ) / ( (1 - alpha)^n_0 + (alpha)^n_0 )
   return(out)
@@ -150,7 +148,6 @@ tau_alpha <- function(alpha, n_0){
 #'
 #' @return [numeric] A vector of length \code{n} containing independent samples
 #' from the truncated Beta distribution on the interval \eqn{(a,b)}.
-#' @export
 rtbeta <- function(n, alpha, beta, a = 0, b = 1){
   # stopifnot(n > 0 & all(beta > 0) & all(alpha > 0))
   x  <- stats::runif(n)
@@ -190,7 +187,6 @@ rtbeta <- function(n, alpha, beta, a = 0, b = 1){
 #' @param C_mat [matrix] A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
 #' @return [numeric] Expected number of triangles incident to node \eqn{i}.
-#' @export
 
 expected_count_triangles_node_CER <- function(i, alpha, C_mat){
 
@@ -237,7 +233,6 @@ expected_count_triangles_node_CER <- function(i, alpha, C_mat){
 #' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
 #' @param C_mat [matrix] A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #' @return [numeric] Expected total number of triangles in the graph.
-#' @export
 expected_count_triangles_CER <- function(alpha, C_mat){
 
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
@@ -270,8 +265,6 @@ expected_count_triangles_CER <- function(alpha, C_mat){
 #'
 #' @return [numeric] Expected value of G_i(G_i - 1).
 #'
-#' @export
-
 E_G_i_x_G_i_minus_1 <- function(i, alpha, C_mat){
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
 
@@ -299,8 +292,6 @@ E_G_i_x_G_i_minus_1 <- function(i, alpha, C_mat){
 #'
 #' @return [numeric] Expected number of non-oriented paths of length two.
 #'
-#' @export
-#'
 expected_count_non_oriented_path2_CER <- function(alpha, C_mat){
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
 
@@ -325,7 +316,6 @@ expected_count_non_oriented_path2_CER <- function(alpha, C_mat){
 #'
 #' @return [numeric] Approximate expected transitivity under the CER model.
 #'
-#' @export
 
 expected_transitivity_CER_approx <- function(alpha, C_mat){
 
@@ -391,9 +381,9 @@ G_from_GCER <- function(W, alpha){
 #'
 #' @return [list] A list containing the inferential output.
 #' @importFrom parallel detectCores
-#' @export
+#' @importFrom stats optim runif
 
-gCER_inference <- function(G_bar, n,
+gCER_inference_v1 <- function(G_bar, n,
                            prior_list=list(W=1/2, n_0=1, a=1, b=1),
                            mcmc=FALSE,
                            mcmc_options=list( n_iter=1000, burnin=0, thinning=1  ),
@@ -496,3 +486,125 @@ gCER_inference <- function(G_bar, n,
   return(out)
 }
 
+
+#' @title Generalized CER model inference
+#'
+#' @param G_sum [numeric vector] M-dimensional vector containing the edge-wise
+#' sample sums of the observed graphs, where M = N(N - 1)/2. The entries encode
+#' the lower triangular part of the edge-by-edge sum of the adjacency matrices
+#' of the observed graphs of $G^{(1:n)}$,
+#' \eqn{n \times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
+#' a Centered Erdős–Rényi (CER) distribution.
+#' @param n [integer] The sample size.
+#' @param prior_list [list] Ordered list of prior hyperparameters:
+#' the location parameter \code{W} and \eqn{n_0 > 0} of the GCER prior for
+#' \eqn{C}; and the shape parameters \eqn{a,b > 0} of the truncated Beta prior
+#' for the scale parameter \eqn{\alpha}.
+#' \code{W} is an M-dimensional numeric vector with entries in \eqn{[0,1]}
+#' encoding the lower triangular part of the representative graph. The default
+#' value is \eqn{1/2} for every edge, reflecting prior ignorance and yielding a
+#' semiconjugate model. By default, \eqn{n_0 = a = b = 1}.
+#'
+#' @param mcmc [logical] If \code{TRUE}, posterior inference is performed via
+#' MCMC. If \code{FALSE}, an empirical Bayes inferential approach is used.
+#'
+#' @param mcmc_options [list] List of MCMC options, including
+#' \code{n_iter}, \code{burnin}, and \code{thinning}.
+#' @param parallel [logical] If \code{TRUE}, parallel computation is used from
+#' the EB method to maximize the marginal likelihood w.r.t. alpha.
+#' @param seed [numeric] The seed to set to run the Gibbs sampler
+#'
+#' @return [list] A list containing the inferential output.
+#' @importFrom parallel detectCores
+#' @importFrom stats optim runif
+#' @export
+gCER_inference <- function(G_sum, n,
+                           prior_list=list(W=1/2, n_0=1, a=1, b=1),
+                           mcmc=FALSE,
+                           mcmc_options=list( n_iter=1000, burnin=0, thinning=1  ),
+                           parallel=TRUE,
+                           seed = 123456){
+
+
+  M = length(G_sum)
+  N = as.integer((1 + sqrt(1 + 8 * M)) / 2)
+
+  G_bar = G_sum/n
+
+  W   = prior_list$W
+
+  if( length(W)==1 ){
+    W=rep(W, M)
+  }
+
+  n_0 = prior_list$n_0
+  a   = prior_list$a
+  b   = prior_list$b
+
+  W_prime = (n_0 / (n_0 + n )) * W + (n / (n_0 + n )) * G_bar
+
+  if(mcmc){
+    n_iter   = mcmc_options$n_iter
+    burnin   = mcmc_options$burnin
+    thinning = mcmc_options$thinning
+
+    # Gibbs sampling semi-conjugate case
+    gibbs_post = optimized_gibbs(G_sum, n,
+                                 keep = n_iter,
+                                 burn = burnin,
+                                 thin = thinning,
+                                 seed = seed)
+
+    out = list(C_mean=gibbs_post$C_mean, n_iter = gibbs_post$n_iter,
+               alpha_chain = gibbs_post$alpha_chain,
+               ecc_dist = gibbs_post$ecc_dist,
+               density_dist = gibbs_post$density_dist,
+               type="gibbs" )
+  }
+  else{
+
+    if( sum(W == 0.5) == M  ){
+
+      EB_fit    = fit_eb_cpp(G_sum, n)
+      C_hat     = EB_fit$C_hat
+      alpha_hat = EB_fit$alpha_hat
+
+    }
+    else{
+      eps=1e-2
+
+      # EB inference
+      C_hat = ifelse( W_prime >= 1/2, 1, 0  )
+
+      if(parallel==T){
+        opt <- optim(par=0.1, fn=marg_lik_CER_gCER_par,
+                     lower = 0+eps, upper=0.5-eps,
+                     method = "L-BFGS-B",
+                     n=n, n_0=n_0, G_bar=G_bar, W=W)
+      }
+      else{
+        opt <- optim(par=0.1, fn=marg_lik_CER_gCER,
+                     lower = 0+eps, upper=0.5-eps,
+                     method = "L-BFGS-B",
+                     n=n, n_0=n_0, G_bar=G_bar, W=W)
+      }
+
+      alpha_hat <- opt$par
+    }
+
+
+    summary_C_hat = exact_graph_stats(C_hat)
+
+
+    ecc = clustering(alpha_hat,
+                     edges = summary_C_hat[1],
+                     d2 = summary_C_hat[2],  summary_C_hat[3],
+                     N)
+
+    density = (M * alpha_hat + sum(C_hat) * ( 1 - 2*alpha_hat ))/M
+
+    out = list(C_hat=C_hat, alpha_hat=alpha_hat, ecc=ecc, density=density, type="EB" )
+  }
+
+  return(out)
+}

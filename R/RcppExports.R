@@ -9,19 +9,25 @@ marg_lik_CER_gCER_par <- function(alpha, n, n_0, G_bar, W) {
     .Call(`_BayesCER_marg_lik_CER_gCER_par`, alpha, n, n_0, G_bar, W)
 }
 
-rmvbern_CER <- function(n, C, alpha) {
-    .Call(`_BayesCER_rmvbern_CER`, n, C, alpha)
+triangles <- function(a, N, nw) {
+    .Call(`_BayesCER_triangles`, a, N, nw)
 }
 
-rmvbern_CER_sum <- function(n, C, alpha) {
-    .Call(`_BayesCER_rmvbern_CER_sum`, n, C, alpha)
+#' @export
+exact_graph_stats <- function(C) {
+    .Call(`_BayesCER_exact_graph_stats`, C)
 }
 
-rmvbern <- function(n, p) {
-    .Call(`_BayesCER_rmvbern`, n, p)
+#' @export
+clustering <- function(a, edges, d2, T, N) {
+    .Call(`_BayesCER_clustering`, a, edges, d2, T, N)
 }
 
-expected_transitivity_CER_approx_cpp <- function(alpha, C_mat) {
-    .Call(`_BayesCER_expected_transitivity_CER_approx_cpp`, alpha, C_mat)
+fit_eb_cpp <- function(counts, n) {
+    .Call(`_BayesCER_fit_eb_cpp`, counts, n)
+}
+
+optimized_gibbs <- function(counts, n, keep = 1000L, burn = 1000L, thin = 10L, seed = 123456L) {
+    .Call(`_BayesCER_optimized_gibbs`, counts, n, keep, burn, thin, seed)
 }
 
