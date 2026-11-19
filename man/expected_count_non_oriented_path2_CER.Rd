@@ -9,7 +9,7 @@ expected_count_non_oriented_path2_CER(alpha, C_mat)
 \arguments{
 \item{alpha}{probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{C_mat}{A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
+\item{C_mat}{A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
 [numeric] Expected number of non-oriented paths of length two.

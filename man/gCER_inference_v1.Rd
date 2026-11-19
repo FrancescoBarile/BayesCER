@@ -17,7 +17,7 @@ gCER_inference_v1(
 \item{G_bar}{[numeric vector] M-dimensional vector containing the edge-wise
 sample means of the observed graphs, where M = N(N - 1)/2. The entries encode
 the lower triangular part of the edge-by-edge average of the adjacency matrices
-of the observed graphs of $G^{(1:n)}$,
+of the observed graphs of \eqn{G^{(1:n)}},
 \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 a Centered Erdős–Rényi (CER) distribution.}
 
