@@ -2,18 +2,18 @@
 % Please edit documentation in R/functions.R
 \name{from_full_adj_to_low_adj}
 \alias{from_full_adj_to_low_adj}
-\title{cast a N \times N matrix encoding the adjacency matrix associated to a graph.
+\title{cast a N \\times N matrix encoding the adjacency matrix associated to a graph.
 into a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the graph.}
 \usage{
 from_full_adj_to_low_adj(full_adj)
 }
 \arguments{
-\item{full_adj}{[matrix] N \times N matrix encoding the adjacency matrix associated to a graph.}
+\item{full_adj}{[matrix] N \\times N matrix encoding the adjacency matrix associated to a graph.}
 }
 \value{
 [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 }
 \description{
-cast a N \times N matrix encoding the adjacency matrix associated to a graph.
+cast a N \\times N matrix encoding the adjacency matrix associated to a graph.
 into a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the graph.
 }

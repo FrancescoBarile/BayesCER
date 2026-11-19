@@ -18,8 +18,8 @@ gCER_inference(
 \item{G_sum}{[numeric vector] M-dimensional vector containing the edge-wise
 sample sums of the observed graphs, where M = N(N - 1)/2. The entries encode
 the lower triangular part of the edge-by-edge sum of the adjacency matrices
-of the observed graphs of $G^{(1:n)}$,
-\eqn{n \times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
+of the observed graphs of \eqn{G^{(1:n)}},
+\eqn{n \\times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 a Centered Erdős–Rényi (CER) distribution.}
 
 \item{n}{[integer] The sample size.}

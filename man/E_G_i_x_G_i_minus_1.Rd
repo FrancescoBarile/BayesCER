@@ -11,7 +11,7 @@ E_G_i_x_G_i_minus_1(i, alpha, C_mat)
 
 \item{alpha}{probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{C_mat}{A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
+\item{C_mat}{A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
 [numeric] Expected value of G_i(G_i - 1).

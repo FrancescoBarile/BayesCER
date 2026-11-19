@@ -239,9 +239,6 @@ output_df_long <- output_df |>
   relocate(method, .after = ending_time)
 
 
-saveRDS(output_df_long,
-        paste0(out_path, "/output_df_long.rds")
-)
 
 
 

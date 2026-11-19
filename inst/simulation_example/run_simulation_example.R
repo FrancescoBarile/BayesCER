@@ -4,8 +4,8 @@ library(BayesCER)
 
 # DGP
 n_vec = c( 10, 100, 1000)
-N_vec = c( 10 )
-alpha_vec = c(0.2)
+N_vec = c( 10, 100, 1000, 2000)
+alpha_vec = c(0.1, 0.2, 0.3)
 scenario_mat = expand.grid(N_vec, alpha_vec)
 
 # hyperparameters
@@ -46,7 +46,7 @@ if (!dir.exists( out_path )) {
   dir.create(out_path)
 }
 
-folder_out <- paste0(out_path, "/output")
+folder_out <- paste0(getwd(), "/inst/extdata/output")
 if (!dir.exists( folder_out )) {
   dir.create(folder_out)
 }

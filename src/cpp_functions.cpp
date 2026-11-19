@@ -87,9 +87,9 @@ double marg_lik_CER_gCER_par(double alpha,
     // std::vector<double>& f2_values;  // Reference to store f2 values
 
     // Constructor to initialize the member variables
-    MyParallelTask(const arma::vec& G_bar, const arma::vec& W, double alpha, int n, int n_0, arma::vec& likel_ij)
+    MyParallelTask(const arma::vec& G_bar, const arma::vec& W, arma::vec& likel_ij, double alpha, int n, int n_0)
       // std::vector<double>& f1_values, std::vector<double>& f2_values)
-      : G_bar(G_bar), W(W), alpha(alpha), n(n), n_0(n_0), likel_ij(likel_ij) {}
+      : G_bar(G_bar), W(W), likel_ij(likel_ij), alpha(alpha), n(n), n_0(n_0) {}
     // f1_values(f1_values), f2_values(f2_values) {}
 
     // Parallel worker class
@@ -132,7 +132,7 @@ double marg_lik_CER_gCER_par(double alpha,
   };
 
   // Create the worker for parallel execution
-  MyParallelTask task(G_bar, W, alpha, n, n_0, likel_ij);
+  MyParallelTask task(G_bar, W, likel_ij, alpha, n, n_0);
   // f1_values, f2_values);
 
   // Parallelize the loop from 0 to M (the length of the vectors)
@@ -210,13 +210,18 @@ arma::rowvec rmvbern_CER_sum(const int n,
 }
 
 // Useful to sample from a GCER
-arma::imat rmvbern(const int n, const arma::vec & p) {
+arma::imat rmvbern_cpp(const int n, const arma::vec & p) {
   arma::mat U = arma::randu(n, p.n_elem);
   U.each_row() -= p.t();
   return arma::conv_to<arma::imat>::from(U < 0.0);
 }
 
+// [[Rcpp::export]]
+arma::imat rmvbern(const int n, const arma::vec& p) {
+  return rmvbern_cpp(n, p);
+}
 
+// [[Rcpp::export]]
 double expected_transitivity_CER_approx_cpp(double alpha,
                                             const arma::mat& C_mat) {
 

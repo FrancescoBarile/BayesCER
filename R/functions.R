@@ -1,4 +1,4 @@
-#' cast a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph into a N \times N matrix.
+#' cast a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph into a N \\times N matrix.
 #' @param low_adj [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 #'
 #' @return [matrix] N x N binary matrix encoding the adjacency matrix associated to a graph.
@@ -13,9 +13,9 @@ from_low_adj_to_full_adj<-function(low_adj){
   return(m2)
 }
 
-#' cast a N \times N matrix encoding the adjacency matrix associated to a graph.
+#' cast a N \\times N matrix encoding the adjacency matrix associated to a graph.
 #' into a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the graph.
-#' @param full_adj [matrix] N \times N matrix encoding the adjacency matrix associated to a graph.
+#' @param full_adj [matrix] N \\times N matrix encoding the adjacency matrix associated to a graph.
 #'
 #' @return [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 
@@ -79,8 +79,10 @@ generate_sbm <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1) {
 #' @param K [numeric] Number of blocks.
 #' @param intra_prob [numeric] Probability of edges within blocks.
 #' @param inter_prob [numeric] Probability of edges between blocks.
+#' @param z [integer vector] A vector specifying the community membership
+#' of each node.
 #'
-#' @return [matrix] N \times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
+#' @return [matrix] N \\times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
 #' @importFrom stats runif
 #' @export
 generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
@@ -184,7 +186,7 @@ rtbeta <- function(n, alpha, beta, a = 0, b = 1){
 #'
 #' @param i [numeric] Index of the node for which the expected triangle count is computed.
 #' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat [matrix] A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @param C_mat [matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
 #' @return [numeric] Expected number of triangles incident to node \eqn{i}.
 
@@ -231,7 +233,7 @@ expected_count_triangles_node_CER <- function(i, alpha, C_mat){
 #' and \eqn{T(C)} is the total number of triangles in \eqn{C}.
 #'
 #' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat [matrix] A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @param C_mat [matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #' @return [numeric] Expected total number of triangles in the graph.
 expected_count_triangles_CER <- function(alpha, C_mat){
 
@@ -261,7 +263,7 @@ expected_count_triangles_CER <- function(alpha, C_mat){
 #'
 #' @param i Index of the node for which the expected value of G_i(G_i - 1) is computed.
 #' @param alpha probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @param C_mat A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
 #' @return [numeric] Expected value of G_i(G_i - 1).
 #'
@@ -288,7 +290,7 @@ E_G_i_x_G_i_minus_1 <- function(i, alpha, C_mat){
 #' under the centered Erdős–Rényi model.
 #'
 #' @param alpha probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @param C_mat A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
 #' @return [numeric] Expected number of non-oriented paths of length two.
 #'
@@ -358,7 +360,7 @@ G_from_GCER <- function(W, alpha){
 #' @param G_bar [numeric vector] M-dimensional vector containing the edge-wise
 #' sample means of the observed graphs, where M = N(N - 1)/2. The entries encode
 #' the lower triangular part of the edge-by-edge average of the adjacency matrices
-#' of the observed graphs of $G^{(1:n)}$,
+#' of the observed graphs of \eqn{G^{(1:n)}},
 #' \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 #' a Centered Erdős–Rényi (CER) distribution.
 #' @param n [integer] The sample size.
@@ -492,8 +494,8 @@ gCER_inference_v1 <- function(G_bar, n,
 #' @param G_sum [numeric vector] M-dimensional vector containing the edge-wise
 #' sample sums of the observed graphs, where M = N(N - 1)/2. The entries encode
 #' the lower triangular part of the edge-by-edge sum of the adjacency matrices
-#' of the observed graphs of $G^{(1:n)}$,
-#' \eqn{n \times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
+#' of the observed graphs of \eqn{G^{(1:n)}},
+#' \eqn{n \\times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 #' a Centered Erdős–Rényi (CER) distribution.
 #' @param n [integer] The sample size.
 #' @param prior_list [list] Ordered list of prior hyperparameters:
@@ -607,4 +609,58 @@ gCER_inference <- function(G_sum, n,
   }
 
   return(out)
+}
+
+#' @title Generate Pretty Nonnegative Axis Breaks
+#'
+#' @param lim [numeric vector] A numeric vector of length two specifying the
+#' lower and upper limits of the range.
+#'
+#' @return [numeric vector] A vector of pretty axis break values restricted
+#' to nonnegative values within the specified range.
+pretty_nonnegative <- function(lim) {
+  v <- pretty(lim,n=3)
+  v[v>=0 & v>=min(lim) & v<=max(lim)]
+}
+
+#' @title Apply Publication-Ready Plot Styling
+#'
+#' @param error [logical] If \code{TRUE}, the y-axis is constrained to
+#' nonnegative values, with its upper limit slightly extended to provide
+#' additional space for plotting. If \code{FALSE}, the y-axis is scaled
+#' automatically.
+#'
+#' @param main [logical] If \code{TRUE}, a smaller font size is used for
+#' axis tick labels, suitable for main plots. If \code{FALSE}, the default
+#' axis tick label size is used.
+#'
+#' @return [list] A list of \code{ggplot2} scale, guide, and theme components
+#' defining the plot appearance, including manual fill and colour scales,
+#' y-axis formatting, panel styling, axis formatting, legend settings, and
+#' plot margins.
+#'
+#' @importFrom ggplot2 scale_y_continuous expansion scale_fill_manual
+#' scale_colour_manual guides guide_legend theme_bw theme element_rect
+#' element_text element_blank element_line margin
+paper_style <- function(error=FALSE,main=FALSE) {
+  yscale <- if(error) scale_y_continuous(
+    limits=function(x)c(0,max(1e-6,x[2])*1.08),breaks=pretty_nonnegative,
+    labels=function(x)format(x,scientific=FALSE,trim=TRUE),expand=expansion(mult=c(.055,.04))) else
+      scale_y_continuous(breaks=pretty_nonnegative,
+                         labels=function(x)format(x,scientific=FALSE,trim=TRUE),expand=expansion(mult=c(.06,.06)))
+  list(scale_fill_manual(values=paper_colors,drop=FALSE),
+       scale_colour_manual(values=paper_outlines,drop=FALSE,guide='none'),
+       guides(fill=guide_legend(override.aes=list(colour=unname(paper_outlines)))),
+       yscale,theme_bw(base_size=15),theme(
+         strip.background=element_rect(fill='#D9D9D9',colour='grey25',linewidth=.5),
+         strip.text=element_text(size=15,colour='grey10'),strip.text.y.right=element_text(angle=-90),
+         panel.grid.minor=element_blank(),panel.grid.major=element_line(colour='grey92',linewidth=.35),
+         panel.border=element_rect(colour='grey25',linewidth=.5),
+         axis.text=element_text(size=if(main)12.5 else 13.5,colour='grey25'),
+         axis.title.x=element_text(size=14,margin=margin(t=7)),
+         axis.ticks=element_line(colour='grey25',linewidth=.35),
+         panel.spacing.x=grid::unit(.025,'in'),panel.spacing.y=grid::unit(.16,'in'),
+         legend.position='right',legend.title=element_text(size=13.5),legend.text=element_text(size=13),
+         legend.key.size=grid::unit(.20,'in'),legend.margin=margin(0,0,0,5),
+         plot.margin=margin(7,8,10,7)))
 }

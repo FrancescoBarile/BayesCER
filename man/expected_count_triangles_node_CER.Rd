@@ -11,7 +11,7 @@ expected_count_triangles_node_CER(i, alpha, C_mat)
 
 \item{alpha}{[numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{C_mat}{[matrix] A N \times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
+\item{C_mat}{[matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
 [numeric] Expected number of triangles incident to node \eqn{i}.

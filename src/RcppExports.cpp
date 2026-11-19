@@ -40,6 +40,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rmvbern
+arma::imat rmvbern(const int n, const arma::vec& p);
+RcppExport SEXP _BayesCER_rmvbern(SEXP nSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(rmvbern(n, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// expected_transitivity_CER_approx_cpp
+double expected_transitivity_CER_approx_cpp(double alpha, const arma::mat& C_mat);
+RcppExport SEXP _BayesCER_expected_transitivity_CER_approx_cpp(SEXP alphaSEXP, SEXP C_matSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type C_mat(C_matSEXP);
+    rcpp_result_gen = Rcpp::wrap(expected_transitivity_CER_approx_cpp(alpha, C_mat));
+    return rcpp_result_gen;
+END_RCPP
+}
 // triangles
 double triangles(const std::vector<uint64_t>& a, int N, int nw);
 RcppExport SEXP _BayesCER_triangles(SEXP aSEXP, SEXP NSEXP, SEXP nwSEXP) {
@@ -107,6 +131,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_BayesCER_marg_lik_CER_gCER", (DL_FUNC) &_BayesCER_marg_lik_CER_gCER, 5},
     {"_BayesCER_marg_lik_CER_gCER_par", (DL_FUNC) &_BayesCER_marg_lik_CER_gCER_par, 5},
+    {"_BayesCER_rmvbern", (DL_FUNC) &_BayesCER_rmvbern, 2},
+    {"_BayesCER_expected_transitivity_CER_approx_cpp", (DL_FUNC) &_BayesCER_expected_transitivity_CER_approx_cpp, 2},
     {"_BayesCER_triangles", (DL_FUNC) &_BayesCER_triangles, 3},
     {"_BayesCER_exact_graph_stats", (DL_FUNC) &_BayesCER_exact_graph_stats, 1},
     {"_BayesCER_clustering", (DL_FUNC) &_BayesCER_clustering, 5},

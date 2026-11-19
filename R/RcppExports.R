@@ -9,6 +9,14 @@ marg_lik_CER_gCER_par <- function(alpha, n, n_0, G_bar, W) {
     .Call(`_BayesCER_marg_lik_CER_gCER_par`, alpha, n, n_0, G_bar, W)
 }
 
+rmvbern <- function(n, p) {
+    .Call(`_BayesCER_rmvbern`, n, p)
+}
+
+expected_transitivity_CER_approx_cpp <- function(alpha, C_mat) {
+    .Call(`_BayesCER_expected_transitivity_CER_approx_cpp`, alpha, C_mat)
+}
+
 triangles <- function(a, N, nw) {
     .Call(`_BayesCER_triangles`, a, N, nw)
 }
