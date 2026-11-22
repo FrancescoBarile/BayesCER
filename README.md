@@ -1,8 +1,8 @@
 # Companion Code
 
-This repository contains the companion code for the preprint **“Efficient Bayesian Inference for Multiple Network Data.”**
+This repository contains the companion code for the preprint **“Efficient Bayesian Inference for Multiple Network Data.”** (https://arxiv.org/abs/2610.01532)
 
-The repository provides an example illustrating part of the simulation study presented in the article. The code is implemented in R and relies on the **BayesCER** package, which is included in this repository.
+The repository illustrates the simulation study presented in the article. The code is implemented in R and relies on the **BayesCER** package, which is included in this repository.
 
 ## Installation
 
@@ -25,7 +25,7 @@ source("reproduction/plots.R")
 
 ## Running the Example
 
-A subset of the simulation results is precomputed and included with the package for illustration in the vignette. This avoids rerunning the simulations when building the vignette.
+The simulation results is precomputed and included with the package for illustration in the vignette. This avoids rerunning the simulations when building the vignette.
 To load the simulation results run:
 ```r
 data("sim_data_result", package = "BayesCER")
