@@ -7,12 +7,12 @@
 expected_count_triangles_CER(alpha, C_mat)
 }
 \arguments{
-\item{alpha}{[numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
+\item{alpha}{\verb{[numeric]} probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{C_mat}{[matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
+\item{C_mat}{\verb{[matrix]} A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
-[numeric] Expected total number of triangles in the graph.
+\verb{[numeric]} Expected total number of triangles in the graph.
 }
 \description{
 Computes the expected total number of triangles in a random graph generated

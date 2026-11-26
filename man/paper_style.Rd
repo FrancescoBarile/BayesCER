@@ -7,17 +7,17 @@
 paper_style(error = FALSE, main = FALSE)
 }
 \arguments{
-\item{error}{[logical] If \code{TRUE}, the y-axis is constrained to
+\item{error}{\verb{[logical]} If \code{TRUE}, the y-axis is constrained to
 nonnegative values, with its upper limit slightly extended to provide
 additional space for plotting. If \code{FALSE}, the y-axis is scaled
 automatically.}
 
-\item{main}{[logical] If \code{TRUE}, a smaller font size is used for
+\item{main}{\verb{[logical]} If \code{TRUE}, a smaller font size is used for
 axis tick labels, suitable for main plots. If \code{FALSE}, the default
 axis tick label size is used.}
 }
 \value{
-[list] A list of \code{ggplot2} scale, guide, and theme components
+\verb{[list]} A list of \code{ggplot2} scale, guide, and theme components
 defining the plot appearance, including manual fill and colour scales,
 y-axis formatting, panel styling, axis formatting, legend settings, and
 plot margins.

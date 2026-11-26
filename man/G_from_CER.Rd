@@ -7,12 +7,12 @@
 G_from_CER(C, alpha)
 }
 \arguments{
-\item{C}{[numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.}
+\item{C}{\verb{[numeric]} M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.}
 
-\item{alpha}{[numeric] probability an edge differs from that of the representative graph C.}
+\item{alpha}{\verb{[numeric]} probability an edge differs from that of the representative graph C.}
 }
 \value{
-[numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to generated CER-distributed graph.
+\verb{[numeric]} M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to generated CER-distributed graph.
 }
 \description{
 generate a CER-distributed graph.

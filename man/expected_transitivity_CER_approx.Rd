@@ -12,7 +12,7 @@ expected_transitivity_CER_approx(alpha, C_mat)
 \item{C_mat}{Reference graph defining the centered Erdős--Rényi model.}
 }
 \value{
-[numeric] Approximate expected transitivity under the CER model.
+\verb{[numeric]} Approximate expected transitivity under the CER model.
 }
 \description{
 Computes the approximation of the expected transitivity (global clustering

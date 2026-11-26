@@ -11,22 +11,26 @@ export(optimized_gibbs)
 export(triangles)
 importFrom(Rcpp,evalCpp)
 importFrom(RcppParallel,RcppParallelLibs)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,element_line)
-importFrom(ggplot2,element_rect)
-importFrom(ggplot2,element_text)
-importFrom(ggplot2,expansion)
-importFrom(ggplot2,guide_legend)
-importFrom(ggplot2,guides)
-importFrom(ggplot2,margin)
-importFrom(ggplot2,scale_colour_manual)
-importFrom(ggplot2,scale_fill_manual)
-importFrom(ggplot2,scale_y_continuous)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_bw)
+importFrom(ggplot2,
+  element_blank,
+  element_line,
+  element_rect,
+  element_text,
+  expansion,
+  guide_legend,
+  guides,
+  margin,
+  scale_colour_manual,
+  scale_fill_manual,
+  scale_y_continuous,
+  theme,
+  theme_bw
+)
 importFrom(igraph,sample_sbm)
 importFrom(parallel,detectCores)
-importFrom(stats,optim)
-importFrom(stats,rbinom)
-importFrom(stats,runif)
+importFrom(stats,
+  optim,
+  rbinom,
+  runif
+)
 useDynLib(BayesCER, .registration = TRUE)

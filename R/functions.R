@@ -1,7 +1,7 @@
 #' cast a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph into a N \\times N matrix.
-#' @param low_adj [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
+#' @param low_adj `[numeric]` M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 #'
-#' @return [matrix] N x N binary matrix encoding the adjacency matrix associated to a graph.
+#' @return `[matrix]` N x N binary matrix encoding the adjacency matrix associated to a graph.
 from_low_adj_to_full_adj<-function(low_adj){
   M<-length(low_adj)
   N<-(1+sqrt(1+8*M))/2
@@ -15,9 +15,9 @@ from_low_adj_to_full_adj<-function(low_adj){
 
 #' cast a N \\times N matrix encoding the adjacency matrix associated to a graph.
 #' into a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the graph.
-#' @param full_adj [matrix] N \\times N matrix encoding the adjacency matrix associated to a graph.
+#' @param full_adj `[matrix]` N \\times N matrix encoding the adjacency matrix associated to a graph.
 #'
-#' @return [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
+#' @return `[numeric]` M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.
 
 from_full_adj_to_low_adj<-function(full_adj){
   low_adj<-t(full_adj)[lower.tri(t(full_adj))]
@@ -25,10 +25,10 @@ from_full_adj_to_low_adj<-function(full_adj){
 }
 
 #' generate a CER-distributed graph.
-#' @param C [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.
-#' @param alpha [numeric] probability an edge differs from that of the representative graph C.
+#' @param C `[numeric]` M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.
+#' @param alpha `[numeric]` probability an edge differs from that of the representative graph C.
 #'
-#' @return [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to generated CER-distributed graph.
+#' @return `[numeric]` M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to generated CER-distributed graph.
 
 G_from_CER <- function(C, alpha) {
   etas<-((C==1)-(C==0))
@@ -38,11 +38,11 @@ G_from_CER <- function(C, alpha) {
 }
 
 #' generate a set of n i.i.d. CER-distributed graphs.
-#' @param C [numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.
-#' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param n [numeric] number of graphs to generate.
+#' @param C `[numeric]` M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.
+#' @param alpha `[numeric]` probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
+#' @param n `[numeric]` number of graphs to generate.
 #'
-#' @return [matrix] n x M binary matrix with each row encoding the lower triangular part of the adjacency matrix associated to the generated CER-distributed graph.
+#' @return `[matrix]` n x M binary matrix with each row encoding the lower triangular part of the adjacency matrix associated to the generated CER-distributed graph.
 
 G_n_from_CER<-function(C, alpha, n) {
   G_group<-t( sapply(1:n, function(i) G_from_CER(C, alpha)) )
@@ -50,12 +50,12 @@ G_n_from_CER<-function(C, alpha, n) {
 }
 
 #' generate a SBM-distributed graph.
-#' @param N [numeric] number of nodes.
-#' @param K [numeric] Number of blocks.
-#' @param intra_prob [numeric] Probability of edges within blocks.
-#' @param inter_prob [numeric] Probability of edges between blocks.
+#' @param N `[numeric]` number of nodes.
+#' @param K `[numeric]` Number of blocks.
+#' @param intra_prob `[numeric]` Probability of edges within blocks.
+#' @param inter_prob `[numeric]` Probability of edges between blocks.
 #'
-#' @return [igraph] An igraph object representing a stochastic block model graph.
+#' @return `[igraph]` An igraph object representing a stochastic block model graph.
 #' @importFrom igraph sample_sbm
 generate_sbm <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1) {
   split_blocks <- function(N, K) {
@@ -75,14 +75,14 @@ generate_sbm <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1) {
 }
 
 #' generate a SBM-distributed graph.
-#' @param N [numeric] number of nodes.
-#' @param K [numeric] Number of blocks.
-#' @param intra_prob [numeric] Probability of edges within blocks.
-#' @param inter_prob [numeric] Probability of edges between blocks.
-#' @param z [integer vector] A vector specifying the community membership
+#' @param N `[numeric]` number of nodes.
+#' @param K `[numeric]` Number of blocks.
+#' @param intra_prob `[numeric]` Probability of edges within blocks.
+#' @param inter_prob `[numeric]` Probability of edges between blocks.
+#' @param z `[integer vector]` A vector specifying the community membership
 #' of each node.
 #'
-#' @return [matrix] N \\times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
+#' @return `[matrix]` N \\times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
 #' @importFrom stats runif
 #' @export
 generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
@@ -121,11 +121,11 @@ generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
 #' which maps a probability parameter \eqn{\alpha} into the interval
 #' \eqn{(0,1/2)}.
 #'
-#' @param alpha [numeric] A probability parameter in the interval \eqn{(0,1/2)}.
-#' @param n_0 [numeric] A positive exponent controlling the concentration
+#' @param alpha `[numeric]` A probability parameter in the interval \eqn{(0,1/2)}.
+#' @param n_0 `[numeric]` A positive exponent controlling the concentration
 #' of the transformation and interpreted as prior sample size.
 #'
-#' @return [numeric] The value of \eqn{\tau(\alpha,n_0)}.
+#' @return `[numeric]` The value of \eqn{\tau(\alpha,n_0)}.
 tau_alpha <- function(alpha, n_0){
   out <- ( (alpha)^n_0 ) / ( (1 - alpha)^n_0 + (alpha)^n_0 )
   return(out)
@@ -136,19 +136,19 @@ tau_alpha <- function(alpha, n_0){
 #' This function generates random draws from a Beta distribution with shape
 #' parameters \eqn{\alpha} and \eqn{\beta}, truncated to the interval
 #' \eqn{(a,b)}.
-#' @param n [integer] Number of random samples to generate.
+#' @param n `[integer]` Number of random samples to generate.
 #'
-#' @param alpha [numeric] First shape parameter of the TBeta distribution.
+#' @param alpha `[numeric]` First shape parameter of the TBeta distribution.
 #' Must be positive.
 #'
-#' @param beta [numeric] Second shape parameter of the TBeta distribution.
+#' @param beta `[numeric]` Second shape parameter of the TBeta distribution.
 #' Must be positive.
 #'
-#' @param a [numeric] Lower truncation bound. Default is \eqn{0}.
+#' @param a `[numeric]` Lower truncation bound. Default is \eqn{0}.
 #'
-#' @param b [numeric] Upper truncation bound. Default is \eqn{1/2}.
+#' @param b `[numeric]` Upper truncation bound. Default is \eqn{1/2}.
 #'
-#' @return [numeric] A vector of length \code{n} containing independent samples
+#' @return `[numeric]` A vector of length \code{n} containing independent samples
 #' from the truncated Beta distribution on the interval \eqn{(a,b)}.
 rtbeta <- function(n, alpha, beta, a = 0, b = 1){
   # stopifnot(n > 0 & all(beta > 0) & all(alpha > 0))
@@ -184,11 +184,11 @@ rtbeta <- function(n, alpha, beta, a = 0, b = 1){
 #' number of edges in the reference graph, and \eqn{T_i(C)} is the number of
 #' triangles containing node \eqn{i} in \eqn{C}.
 #'
-#' @param i [numeric] Index of the node for which the expected triangle count is computed.
-#' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat [matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @param i `[numeric]` Index of the node for which the expected triangle count is computed.
+#' @param alpha `[numeric]` probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
+#' @param C_mat `[matrix]` A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
-#' @return [numeric] Expected number of triangles incident to node \eqn{i}.
+#' @return `[numeric]` Expected number of triangles incident to node \eqn{i}.
 
 expected_count_triangles_node_CER <- function(i, alpha, C_mat){
 
@@ -232,9 +232,9 @@ expected_count_triangles_node_CER <- function(i, alpha, C_mat){
 #' \eqn{d_C=\sum_i d_i/2} is the number of edges in the reference graph,
 #' and \eqn{T(C)} is the total number of triangles in \eqn{C}.
 #'
-#' @param alpha [numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
-#' @param C_mat [matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
-#' @return [numeric] Expected total number of triangles in the graph.
+#' @param alpha `[numeric]` probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
+#' @param C_mat `[matrix]` A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
+#' @return `[numeric]` Expected total number of triangles in the graph.
 expected_count_triangles_CER <- function(alpha, C_mat){
 
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
@@ -265,7 +265,7 @@ expected_count_triangles_CER <- function(alpha, C_mat){
 #' @param alpha probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
 #' @param C_mat A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
-#' @return [numeric] Expected value of G_i(G_i - 1).
+#' @return `[numeric]` Expected value of G_i(G_i - 1).
 #'
 E_G_i_x_G_i_minus_1 <- function(i, alpha, C_mat){
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
@@ -292,7 +292,7 @@ E_G_i_x_G_i_minus_1 <- function(i, alpha, C_mat){
 #' @param alpha probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
 #' @param C_mat A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.
 #'
-#' @return [numeric] Expected number of non-oriented paths of length two.
+#' @return `[numeric]` Expected number of non-oriented paths of length two.
 #'
 expected_count_non_oriented_path2_CER <- function(alpha, C_mat){
   # C_mat = as.matrix(as_adjacency_matrix(C_igraph))
@@ -316,7 +316,7 @@ expected_count_non_oriented_path2_CER <- function(alpha, C_mat){
 #' @param alpha probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.
 #' @param C_mat Reference graph defining the centered Erdős--Rényi model.
 #'
-#' @return [numeric] Approximate expected transitivity under the CER model.
+#' @return `[numeric]` Approximate expected transitivity under the CER model.
 #'
 
 expected_transitivity_CER_approx <- function(alpha, C_mat){
@@ -346,7 +346,7 @@ expected_transitivity_CER_approx <- function(alpha, C_mat){
 #' @param W M-dimensional numeric vector encoding the location parameter W.
 #' @param alpha concentration parameter in \eqn{(0,1/2)}.
 #'
-#' @return [numeric] A binary M-dimensional vector encoding the lower triangular part of the generated graph.
+#' @return `[numeric]` A binary M-dimensional vector encoding the lower triangular part of the generated graph.
 #'
 #' @importFrom stats rbinom
 G_from_GCER <- function(W, alpha){
@@ -357,14 +357,14 @@ G_from_GCER <- function(W, alpha){
 
 #' @title Generalized CER model inference
 #'
-#' @param G_bar [numeric vector] M-dimensional vector containing the edge-wise
+#' @param G_bar `[numeric vector]` M-dimensional vector containing the edge-wise
 #' sample means of the observed graphs, where M = N(N - 1)/2. The entries encode
 #' the lower triangular part of the edge-by-edge average of the adjacency matrices
 #' of the observed graphs of \eqn{G^{(1:n)}},
 #' \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 #' a Centered Erdős–Rényi (CER) distribution.
-#' @param n [integer] The sample size.
-#' @param prior_list [list] Ordered list of prior hyperparameters:
+#' @param n `[integer]` The sample size.
+#' @param prior_list `[list]` Ordered list of prior hyperparameters:
 #' the location parameter \code{W} and \eqn{n_0 > 0} of the GCER prior for
 #' \eqn{C}; and the shape parameters \eqn{a,b > 0} of the truncated Beta prior
 #' for the scale parameter \eqn{\alpha}.
@@ -373,15 +373,15 @@ G_from_GCER <- function(W, alpha){
 #' value is \eqn{1/2} for every edge, reflecting prior ignorance and yielding a
 #' semiconjugate model. By default, \eqn{n_0 = a = b = 1}.
 #'
-#' @param mcmc [logical] If \code{TRUE}, posterior inference is performed via
+#' @param mcmc `[logical]` If \code{TRUE}, posterior inference is performed via
 #' MCMC. If \code{FALSE}, an empirical Bayes inferential approach is used.
 #'
-#' @param mcmc_options [list] List of MCMC options, including
+#' @param mcmc_options `[list]` List of MCMC options, including
 #' \code{n_iter}, \code{burnin}, and \code{thinning}.
-#' @param parallel [logical] If \code{TRUE}, parallel computation is used from
+#' @param parallel `[logical]` If \code{TRUE}, parallel computation is used from
 #' the EB method to maximize the marginal likelihood w.r.t. alpha.
 #'
-#' @return [list] A list containing the inferential output.
+#' @return `[list] A list containing the inferential output.
 #' @importFrom parallel detectCores
 #' @importFrom stats optim runif
 
@@ -491,14 +491,14 @@ gCER_inference_v1 <- function(G_bar, n,
 
 #' @title Generalized CER model inference
 #'
-#' @param G_sum [numeric vector] M-dimensional vector containing the edge-wise
+#' @param G_sum `[numeric vector]` M-dimensional vector containing the edge-wise
 #' sample sums of the observed graphs, where M = N(N - 1)/2. The entries encode
 #' the lower triangular part of the edge-by-edge sum of the adjacency matrices
 #' of the observed graphs of \eqn{G^{(1:n)}},
 #' \eqn{n \\times \bar{G}}, where \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 #' a Centered Erdős–Rényi (CER) distribution.
-#' @param n [integer] The sample size.
-#' @param prior_list [list] Ordered list of prior hyperparameters:
+#' @param n `[integer]` The sample size.
+#' @param prior_list `[list]` Ordered list of prior hyperparameters:
 #' the location parameter \code{W} and \eqn{n_0 > 0} of the GCER prior for
 #' \eqn{C}; and the shape parameters \eqn{a,b > 0} of the truncated Beta prior
 #' for the scale parameter \eqn{\alpha}.
@@ -507,16 +507,16 @@ gCER_inference_v1 <- function(G_bar, n,
 #' value is \eqn{1/2} for every edge, reflecting prior ignorance and yielding a
 #' semiconjugate model. By default, \eqn{n_0 = a = b = 1}.
 #'
-#' @param mcmc [logical] If \code{TRUE}, posterior inference is performed via
+#' @param mcmc `[logical]` If \code{TRUE}, posterior inference is performed via
 #' MCMC. If \code{FALSE}, an empirical Bayes inferential approach is used.
 #'
-#' @param mcmc_options [list] List of MCMC options, including
+#' @param mcmc_options `[list]` List of MCMC options, including
 #' \code{n_iter}, \code{burnin}, and \code{thinning}.
-#' @param parallel [logical] If \code{TRUE}, parallel computation is used from
+#' @param parallel `[logical]` If \code{TRUE}, parallel computation is used from
 #' the EB method to maximize the marginal likelihood w.r.t. alpha.
-#' @param seed [numeric] The seed to set to run the Gibbs sampler
+#' @param seed `[numeric]` The seed to set to run the Gibbs sampler
 #'
-#' @return [list] A list containing the inferential output.
+#' @return `[list]` A list containing the inferential output.
 #' @importFrom parallel detectCores
 #' @importFrom stats optim runif
 #' @export
@@ -613,10 +613,10 @@ gCER_inference <- function(G_sum, n,
 
 #' @title Generate Pretty Nonnegative Axis Breaks
 #'
-#' @param lim [numeric vector] A numeric vector of length two specifying the
+#' @param lim `[numeric vector]` A numeric vector of length two specifying the
 #' lower and upper limits of the range.
 #'
-#' @return [numeric vector] A vector of pretty axis break values restricted
+#' @return `[numeric vector]` A vector of pretty axis break values restricted
 #' to nonnegative values within the specified range.
 pretty_nonnegative <- function(lim) {
   v <- pretty(lim,n=3)
@@ -625,23 +625,23 @@ pretty_nonnegative <- function(lim) {
 
 #' @title Apply Publication-Ready Plot Styling
 #'
-#' @param error [logical] If \code{TRUE}, the y-axis is constrained to
+#' @param error `[logical]` If \code{TRUE}, the y-axis is constrained to
 #' nonnegative values, with its upper limit slightly extended to provide
 #' additional space for plotting. If \code{FALSE}, the y-axis is scaled
 #' automatically.
 #'
-#' @param main [logical] If \code{TRUE}, a smaller font size is used for
+#' @param main `[logical]` If \code{TRUE}, a smaller font size is used for
 #' axis tick labels, suitable for main plots. If \code{FALSE}, the default
 #' axis tick label size is used.
 #'
-#' @return [list] A list of \code{ggplot2} scale, guide, and theme components
+#' @return `[list]` A list of \code{ggplot2} scale, guide, and theme components
 #' defining the plot appearance, including manual fill and colour scales,
 #' y-axis formatting, panel styling, axis formatting, legend settings, and
 #' plot margins.
 #'
 #' @importFrom ggplot2 scale_y_continuous expansion scale_fill_manual
-#' scale_colour_manual guides guide_legend theme_bw theme element_rect
-#' element_text element_blank element_line margin
+#'   scale_colour_manual guides guide_legend theme_bw theme element_rect
+#'   element_text element_blank element_line margin
 paper_style <- function(error=FALSE,main=FALSE) {
   yscale <- if(error) scale_y_continuous(
     limits=function(x)c(0,max(1e-6,x[2])*1.08),breaks=pretty_nonnegative,

@@ -13,14 +13,14 @@ Before running the code, please install the **BayesCER** package from the reposi
 Once the package has been installed, run the following script from the root directory of the repository:
 
 ```r
-source("reproduction/simulation_study.R")
+source("inst/reproduction/run_simulation_study.R")
 ```
 
 The script runs the simulation study described in the article. The complete simulation study involves a substantially larger number of simulations and may require considerable computational time.
 Once the code has been executed, run the following script to reproduce the plots showed in the article.
 
 ```r
-source("reproduction/plots.R")
+source("inst/reproduction/plots.R")
 ```
 
 ## Running the Example

@@ -14,16 +14,16 @@ gCER_inference_v1(
 )
 }
 \arguments{
-\item{G_bar}{[numeric vector] M-dimensional vector containing the edge-wise
+\item{G_bar}{\verb{[numeric vector]} M-dimensional vector containing the edge-wise
 sample means of the observed graphs, where M = N(N - 1)/2. The entries encode
 the lower triangular part of the edge-by-edge average of the adjacency matrices
 of the observed graphs of \eqn{G^{(1:n)}},
 \eqn{\bar{G} = n^{-1}\sum_{i=1}^n G_i}, assuming the observed graphs follow
 a Centered Erdős–Rényi (CER) distribution.}
 
-\item{n}{[integer] The sample size.}
+\item{n}{\verb{[integer]} The sample size.}
 
-\item{prior_list}{[list] Ordered list of prior hyperparameters:
+\item{prior_list}{\verb{[list]} Ordered list of prior hyperparameters:
 the location parameter \code{W} and \eqn{n_0 > 0} of the GCER prior for
 \eqn{C}; and the shape parameters \eqn{a,b > 0} of the truncated Beta prior
 for the scale parameter \eqn{\alpha}.
@@ -32,17 +32,17 @@ encoding the lower triangular part of the representative graph. The default
 value is \eqn{1/2} for every edge, reflecting prior ignorance and yielding a
 semiconjugate model. By default, \eqn{n_0 = a = b = 1}.}
 
-\item{mcmc}{[logical] If \code{TRUE}, posterior inference is performed via
+\item{mcmc}{\verb{[logical]} If \code{TRUE}, posterior inference is performed via
 MCMC. If \code{FALSE}, an empirical Bayes inferential approach is used.}
 
-\item{mcmc_options}{[list] List of MCMC options, including
+\item{mcmc_options}{\verb{[list]} List of MCMC options, including
 \code{n_iter}, \code{burnin}, and \code{thinning}.}
 
-\item{parallel}{[logical] If \code{TRUE}, parallel computation is used from
+\item{parallel}{\verb{[logical]} If \code{TRUE}, parallel computation is used from
 the EB method to maximize the marginal likelihood w.r.t. alpha.}
 }
 \value{
-[list] A list containing the inferential output.
+`\link{list} A list containing the inferential output.
 }
 \description{
 Generalized CER model inference

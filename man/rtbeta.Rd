@@ -7,20 +7,20 @@
 rtbeta(n, alpha, beta, a = 0, b = 1)
 }
 \arguments{
-\item{n}{[integer] Number of random samples to generate.}
+\item{n}{\verb{[integer]} Number of random samples to generate.}
 
-\item{alpha}{[numeric] First shape parameter of the TBeta distribution.
+\item{alpha}{\verb{[numeric]} First shape parameter of the TBeta distribution.
 Must be positive.}
 
-\item{beta}{[numeric] Second shape parameter of the TBeta distribution.
+\item{beta}{\verb{[numeric]} Second shape parameter of the TBeta distribution.
 Must be positive.}
 
-\item{a}{[numeric] Lower truncation bound. Default is \eqn{0}.}
+\item{a}{\verb{[numeric]} Lower truncation bound. Default is \eqn{0}.}
 
-\item{b}{[numeric] Upper truncation bound. Default is \eqn{1/2}.}
+\item{b}{\verb{[numeric]} Upper truncation bound. Default is \eqn{1/2}.}
 }
 \value{
-[numeric] A vector of length \code{n} containing independent samples
+\verb{[numeric]} A vector of length \code{n} containing independent samples
 from the truncated Beta distribution on the interval \eqn{(a,b)}.
 }
 \description{

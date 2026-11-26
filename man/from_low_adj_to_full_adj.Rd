@@ -7,10 +7,10 @@
 from_low_adj_to_full_adj(low_adj)
 }
 \arguments{
-\item{low_adj}{[numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.}
+\item{low_adj}{\verb{[numeric]} M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph.}
 }
 \value{
-[matrix] N x N binary matrix encoding the adjacency matrix associated to a graph.
+\verb{[matrix]} N x N binary matrix encoding the adjacency matrix associated to a graph.
 }
 \description{
 cast a M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to a graph into a N \\times N matrix.

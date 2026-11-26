@@ -14,7 +14,7 @@ E_G_i_x_G_i_minus_1(i, alpha, C_mat)
 \item{C_mat}{A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
-[numeric] Expected value of G_i(G_i - 1).
+\verb{[numeric]} Expected value of G_i(G_i - 1).
 }
 \description{
 Computes the expected value of \eqn{G_i(G_i-1)} for node \code{i}

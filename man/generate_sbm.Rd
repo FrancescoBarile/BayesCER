@@ -7,16 +7,16 @@
 generate_sbm(N, K = 2, intra_prob = 0.8, inter_prob = 0.1)
 }
 \arguments{
-\item{N}{[numeric] number of nodes.}
+\item{N}{\verb{[numeric]} number of nodes.}
 
-\item{K}{[numeric] Number of blocks.}
+\item{K}{\verb{[numeric]} Number of blocks.}
 
-\item{intra_prob}{[numeric] Probability of edges within blocks.}
+\item{intra_prob}{\verb{[numeric]} Probability of edges within blocks.}
 
-\item{inter_prob}{[numeric] Probability of edges between blocks.}
+\item{inter_prob}{\verb{[numeric]} Probability of edges between blocks.}
 }
 \value{
-[igraph] An igraph object representing a stochastic block model graph.
+\verb{[igraph]} An igraph object representing a stochastic block model graph.
 }
 \description{
 generate a SBM-distributed graph.

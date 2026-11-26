@@ -12,7 +12,7 @@ expected_count_non_oriented_path2_CER(alpha, C_mat)
 \item{C_mat}{A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
-[numeric] Expected number of non-oriented paths of length two.
+\verb{[numeric]} Expected number of non-oriented paths of length two.
 }
 \description{
 Computes the expected number of non-oriented paths of length two

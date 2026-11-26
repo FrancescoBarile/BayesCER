@@ -7,14 +7,14 @@
 G_n_from_CER(C, alpha, n)
 }
 \arguments{
-\item{C}{[numeric] M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.}
+\item{C}{\verb{[numeric]} M-dimensional numeric binary vector encoding the lower triangular part of the adjacency matrix associated to the representative graph C.}
 
-\item{alpha}{[numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
+\item{alpha}{\verb{[numeric]} probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{n}{[numeric] number of graphs to generate.}
+\item{n}{\verb{[numeric]} number of graphs to generate.}
 }
 \value{
-[matrix] n x M binary matrix with each row encoding the lower triangular part of the adjacency matrix associated to the generated CER-distributed graph.
+\verb{[matrix]} n x M binary matrix with each row encoding the lower triangular part of the adjacency matrix associated to the generated CER-distributed graph.
 }
 \description{
 generate a set of n i.i.d. CER-distributed graphs.

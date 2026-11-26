@@ -8,4 +8,15 @@
 \description{
 Package for Bayesian network modeling.
 }
+\author{
+\strong{Maintainer}: Francesco Barile \email{francesco.barile@unimib.it}
+
+Authors:
+\itemize{
+  \item Francesco Barile \email{francesco.barile@unimib.it}
+  \item Sara Capozio
+  \item Bernardo Nipoti
+}
+
+}
 \keyword{internal}

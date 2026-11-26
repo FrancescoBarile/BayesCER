@@ -12,7 +12,7 @@ G_from_GCER(W, alpha)
 \item{alpha}{concentration parameter in \eqn{(0,1/2)}.}
 }
 \value{
-[numeric] A binary M-dimensional vector encoding the lower triangular part of the generated graph.
+\verb{[numeric]} A binary M-dimensional vector encoding the lower triangular part of the generated graph.
 }
 \description{
 Generate a graph from a Generalized Centered Erdős–Rényi (GCER) model.

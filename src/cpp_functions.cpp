@@ -21,7 +21,43 @@
 using namespace Rcpp;
 using namespace arma;
 
-
+ //' @name marg_lik_CER_gCER
+ //' @title Compute the negative log marginal likelihood under the gCER model
+ //'
+ //' Evaluates the negative log marginal likelihood of the generalized
+ //' centered Erdős–Rényi (gCER) model for a given value of the scale
+ //' parameter. The computation integrates out the representative
+ //' graph and is performed independently for each possible edge.
+ //'
+ //' @param alpha Value of the scale parameter, with
+ //'   \eqn{0 < \alpha < 0.5}.
+ //' @param n Number of observed networks.
+ //' @param n_0 Prior effective sample size associated with the
+ //'   representative graph.
+ //' @param G_bar Numeric vector containing the edge-wise sample
+ //'   proportions across the observed networks.
+ //' @param W Numeric vector containing the prior location parameters
+ //'   for the representative graph, with entries in \eqn{[0,1]}.
+ //'   Its length must equal that of \code{G_bar}.
+ //'
+ //' @return The negative log marginal likelihood evaluated at
+ //'   \code{alpha}.
+ //'
+ //' @details
+ //' The marginal likelihood is computed by integrating out the
+ //' representative graph under the gCER prior. The calculation is
+ //' performed on the log scale using a log-sum-exp representation
+ //' for numerical stability.
+ //'
+ //' This function is used internally by the empirical Bayes
+ //' procedure when optimizing the marginal likelihood with respect
+ //' to \eqn{\alpha}.
+ //'
+ //' @references
+ //' Barile, F., Capozio, S., and Nipoti, B.
+ //' Efficient Bayesian inference for multiple network data.
+ //' Accepted for publication in \emph{Statistics and Probability Letters}.
+ //'
 // [[Rcpp::export(rng = false)]]
 double marg_lik_CER_gCER(double alpha,
                          int n,
@@ -60,6 +96,45 @@ double marg_lik_CER_gCER(double alpha,
   return -out;
 }
 
+ //' @name marg_lik_CER_gCER_par
+ //' @title Compute the negative log marginal likelihood under the gCER model
+ //' using parallel computation
+ //'
+ //' Evaluates the negative log marginal likelihood of the generalized
+ //' centered Erdős–Rényi (gCER) model for a given value of the scale
+ //' parameter. The computation integrates out the representative
+ //' graph and evaluates the edge-wise contributions in parallel
+ //' using RcppParallel.
+ //'
+ //' @param alpha Value of the scale parameter, with
+ //'   \eqn{0 < \alpha < 0.5}.
+ //' @param n Number of observed networks.
+ //' @param n_0 Prior effective sample size associated with the
+ //'   representative graph.
+ //' @param G_bar Numeric vector containing the edge-wise sample
+ //'   proportions across the observed networks.
+ //' @param W Numeric vector containing the prior location parameters
+ //'   for the representative graph, with entries in \eqn{[0,1]}.
+ //'   Its length must equal that of \code{G_bar}.
+ //'
+ //' @return The negative log marginal likelihood evaluated at
+ //'   \code{alpha}.
+ //'
+ //' @details
+ //' The marginal likelihood is computed by integrating out the
+ //' representative graph under the gCER prior. The calculation
+ //' uses a log-sum-exp representation for numerical stability.
+ //' Edge-wise contributions are evaluated in parallel using
+ //' \pkg{RcppParallel}.
+ //'
+ //' This function provides a parallel alternative to
+ //' \code{\link{marg_lik_CER_gCER}}.
+ //'
+ //' @references
+ //' Barile, F., Capozio, S., and Nipoti, B.
+ //' Efficient Bayesian inference for multiple network data.
+ //' Accepted for publication in \emph{Statistics and Probability Letters}.
+ //'
 // [[Rcpp::export(rng = false)]]
 double marg_lik_CER_gCER_par(double alpha,
                              int n,
@@ -256,6 +331,29 @@ double expected_transitivity_CER_approx_cpp(double alpha,
   return num / den;
 }
 
+ //' @name triangles
+ //' @title Count the number of triangles in a graph
+ //'
+ //' Computes the number of triangles in an undirected, unweighted
+ //' graph represented by a bit-packed adjacency matrix. The
+ //' computation uses bitwise operations to identify common
+ //' neighbours of adjacent vertices.
+ //'
+ //' @param a Vector of unsigned 64-bit integers representing the
+ //' bit-packed adjacency matrix. Each row occupies \code{nw}
+ //' consecutive entries.
+ //' @param N Number of vertices in the graph.
+ //' @param nw Number of 64-bit words used to represent each row
+ //' of the adjacency matrix, typically \code{ceiling(N / 64)}.
+ //'
+ //' @return The number of triangles in the graph.
+ //'
+ //' @details
+ //' Each triangle is counted once for each of its three edges
+ //' through the common-neighbour calculation. The result is
+ //' therefore divided by three to obtain the total number of
+ //' distinct triangles.
+ //'
 // [[Rcpp::export(rng = false)]]
 double triangles(const std::vector<uint64_t>& a,int N,int nw) {
   uint64_t total=0;
@@ -269,6 +367,32 @@ double triangles(const std::vector<uint64_t>& a,int N,int nw) {
   return double(total)/3.;
 }
 
+ //' @name exact_graph_stats
+ //' @title Compute exact graph statistics
+ //'
+ //' Computes exact graph statistics from the upper-triangular
+ //' vector representation of an undirected, unweighted network.
+ //' The function returns the number of edges, the sum of squared
+ //' node degrees, and the number of triangles.
+ //'
+ //' @param C Integer vector containing the upper-triangular entries
+ //' of the network adjacency matrix, stored column-wise.
+ //' Entries equal to 1 indicate the presence of an edge; entries
+ //' equal to 0 indicate its absence.
+ //'
+ //' @return A numeric vector of length three containing:
+ //' \describe{
+ //'   \item{edges}{Number of edges in the network.}
+ //'   \item{d2}{Sum of squared node degrees.}
+ //'   \item{triangles}{Number of triangles in the network.}
+ //' }
+ //'
+ //' @details
+ //' The number of nodes is inferred from the length of `C`, which
+ //' must equal N(N-1)/2 for some integer N. The function assumes
+ //' that `C` represents the upper triangular part of a symmetric
+ //' adjacency matrix, excluding the diagonal.
+ //'
 //' @export
 // [[Rcpp::export(rng = false)]]
 arma::vec exact_graph_stats(const arma::ivec& C) {
@@ -313,6 +437,23 @@ arma::vec exact_graph_stats(const arma::ivec& C) {
   return out;
 }
 
+ //' @name clustering
+ //' @title Compute the expected global clustering coefficient
+ //'
+ //' Computes the expected global clustering coefficient of a network
+ //' under a generalized centered Erdős–Rényi model. The computation
+ //' is based on the model parameter and graph statistics, including
+ //' the number of edges, the sum of squared degrees, and the number
+ //' of triangles.
+ //'
+ //' @param a Model parameter controlling the edge probabilities.
+ //' @param edges Number of edges in the observed network.
+ //' @param d2 Sum of squared node degrees in the observed network.
+ //' @param T Number of triangles in the observed network.
+ //' @param N Number of nodes in the network.
+ //'
+ //' @return The expected global clustering coefficient.
+ //'
 //' @export
  // [[Rcpp::export(rng = false)]]
 double clustering(double a,double edges,double d2,double T,int N) {
@@ -322,7 +463,42 @@ double clustering(double a,double edges,double d2,double T,int N) {
   return 3*et/ey;
 }
 
-
+ //' @name fit_eb_cpp
+ //' @title Fit the empirical Bayes model
+ //'
+ //' Estimates the empirical Bayes parameter and the center of a
+ //' generalized centered Erdős–Rényi model from a collection of
+ //' observed edge counts.
+ //'
+ //' The parameter is estimated by minimizing the negative log
+ //' marginal likelihood using golden-section optimization.
+ //' The center is obtained through a majority-rule criterion.
+ //'
+ //' @param counts Integer vector containing the observed edge counts
+ //' across the networks or observations.
+ //' @param n Number of possible edges in each network, corresponding
+ //' to the number of trials for each edge count.
+ //'
+ //' @return A list containing:
+ //' \describe{
+ //'   \item{alpha_hat}{Estimated empirical Bayes parameter,
+ //'   constrained to the interval (0, 0.5).}
+ //'   \item{C_hat}{Integer vector representing the estimated
+ //'   majority-rule center. An entry is equal to 1 if the
+ //'   corresponding edge count is at least n/2, and 0 otherwise.}
+ //'   \item{objective}{Value of the negative log marginal likelihood
+ //'   evaluated at the estimated parameter.}
+ //' }
+ //'
+ //' @details
+ //' The empirical Bayes estimate is obtained by minimizing the
+ //' negative log marginal likelihood over (0, 0.5), using
+ //' golden-section optimization. The optimization tolerance is
+ //' 1e-11.
+ //'
+ //' The majority-rule center is computed as
+ //' \eqn{\widehat C_j = \mathbb{I}(2\,\text{counts}_j \geq n)}.
+ //'
 // [[Rcpp::export(rng = false)]]
 Rcpp::List fit_eb_cpp(const arma::ivec& counts, int n) {
 
@@ -404,7 +580,78 @@ Rcpp::List fit_eb_cpp(const arma::ivec& counts, int n) {
 }
 
 
-// [[Rcpp::export]]
+ //' @name optimized_gibbs
+ //' @title Perform optimized Gibbs sampling for generalized CER models
+ //'
+ //' Performs Gibbs sampling for Bayesian inference under the generalized
+ //' centered Erdős–Rényi (gCER) model. The algorithm samples the model
+ //' parameter and network configurations conditional on the observed
+ //' edge counts. It uses bit-packed adjacency matrices and incremental
+ //' updates of graph statistics to improve computational efficiency.
+ //'
+ //' @param counts Integer vector containing the observed edge counts
+ //' for each possible edge across the observed networks or replicates.
+ //' Its length must be equal to N(N-1)/2 for some integer N, and each
+ //' entry must belong to \eqn{\{0,\ldots,n\}}.
+ //' @param n Number of Bernoulli trials associated with each possible
+ //' edge.
+ //' @param keep Number of posterior samples to retain. Defaults to 1000.
+ //' @param burn Number of initial iterations to discard as burn-in.
+ //' Defaults to 1000.
+ //' @param thin Thinning interval between retained posterior samples.
+ //' Defaults to 10.
+ //' @param seed Integer seed used to initialize the random number
+ //' generator. Defaults to 123456.
+ //'
+ //' @return A list containing the following elements:
+ //' \describe{
+ //'   \item{C_mean}{Posterior mean of the network adjacency indicators
+ //'   for each possible edge.}
+ //'   \item{alpha_chain}{Retained posterior samples of the model
+ //'   parameter \eqn{\alpha}.}
+ //'   \item{ecc_dist}{Posterior samples of the global clustering
+ //'   coefficient.}
+ //'   \item{density_dist}{Posterior samples of the network density.}
+ //'   \item{triangle_count}{Posterior samples of the number of
+ //'   triangles in the network.}
+ //'   \item{degree_squared_sum}{Posterior samples of the sum of
+ //'   squared node degrees.}
+ //'   \item{center_edge_count}{Posterior samples of the number of
+ //'   edges in the center network.}
+ //' }
+ //'
+ //' @details
+ //' The number of nodes is inferred from the length of \code{counts}.
+ //' The initial network configuration is obtained using the
+ //' majority-rule criterion, setting an edge indicator to one whenever
+ //' its corresponding count is at least \eqn{n/2}.
+ //'
+ //' The algorithm alternates between updating the model parameter
+ //' \eqn{\alpha} and sampling network configurations conditional on
+ //' the observed edge counts. The parameter update uses a truncated
+ //' Beta distribution, while network configurations are updated through
+ //' group-wise edge flips.
+ //'
+ //' The total number of MCMC iterations is
+ //' \eqn{\text{burn}+\text{thin}\times\text{keep}}.
+ //' The first \code{burn} iterations are discarded, and one sample is
+ //' retained every \code{thin} iterations thereafter.
+ //'
+ //' Graph statistics are computed using incremental updates whenever
+ //' computationally convenient, with a full recomputation of the
+ //' triangle count otherwise.
+ //'
+ //' @references
+ //' Barile, F., Capozio, S., and Nipoti, B.
+ //' Efficient Bayesian inference for multiple network data.
+ //' Accepted for publication in \emph{Statistics and Probability Letters}.
+ //' @details
+ //' For reproducibility, set the R random-number generator seed using
+ //' \code{set.seed()} before calling this function. The \code{seed}
+ //' argument controls the C++ random-number generator used for
+ //' network configuration updates.
+ //' @export
+ // [[Rcpp::export]]
 List optimized_gibbs(arma::ivec counts,
                      int n,
                      int keep = 1000,

@@ -11,13 +11,13 @@ which maps a probability parameter \eqn{\alpha} into the interval
 tau_alpha(alpha, n_0)
 }
 \arguments{
-\item{alpha}{[numeric] A probability parameter in the interval \eqn{(0,1/2)}.}
+\item{alpha}{\verb{[numeric]} A probability parameter in the interval \eqn{(0,1/2)}.}
 
-\item{n_0}{[numeric] A positive exponent controlling the concentration
+\item{n_0}{\verb{[numeric]} A positive exponent controlling the concentration
 of the transformation and interpreted as prior sample size.}
 }
 \value{
-[numeric] The value of \eqn{\tau(\alpha,n_0)}.
+\verb{[numeric]} The value of \eqn{\tau(\alpha,n_0)}.
 }
 \description{
 Compute the tau transformation of alpha.

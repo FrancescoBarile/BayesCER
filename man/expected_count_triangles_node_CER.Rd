@@ -7,14 +7,14 @@
 expected_count_triangles_node_CER(i, alpha, C_mat)
 }
 \arguments{
-\item{i}{[numeric] Index of the node for which the expected triangle count is computed.}
+\item{i}{\verb{[numeric]} Index of the node for which the expected triangle count is computed.}
 
-\item{alpha}{[numeric] probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
+\item{alpha}{\verb{[numeric]} probability in \eqn{(0,1/2)} that an edge differs from that of the representative graph C.}
 
-\item{C_mat}{[matrix] A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
+\item{C_mat}{\verb{[matrix]} A N \\times N matrix encoding the adjacency matrix associated to the representative graph of the CER model.}
 }
 \value{
-[numeric] Expected number of triangles incident to node \eqn{i}.
+\verb{[numeric]} Expected number of triangles incident to node \eqn{i}.
 }
 \description{
 Computes the expected number of triangles involving node \eqn{i} in a

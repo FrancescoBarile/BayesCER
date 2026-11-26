@@ -13,19 +13,19 @@ generate_sbm_fast(
 )
 }
 \arguments{
-\item{N}{[numeric] number of nodes.}
+\item{N}{\verb{[numeric]} number of nodes.}
 
-\item{K}{[numeric] Number of blocks.}
+\item{K}{\verb{[numeric]} Number of blocks.}
 
-\item{intra_prob}{[numeric] Probability of edges within blocks.}
+\item{intra_prob}{\verb{[numeric]} Probability of edges within blocks.}
 
-\item{inter_prob}{[numeric] Probability of edges between blocks.}
+\item{inter_prob}{\verb{[numeric]} Probability of edges between blocks.}
 
-\item{z}{[integer vector] A vector specifying the community membership
+\item{z}{\verb{[integer vector]} A vector specifying the community membership
 of each node.}
 }
 \value{
-[matrix] N \\times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
+\verb{[matrix]} N \\times N binary matrix encoding the adjacency matrix associated to the generated SBM-distributed graph.
 }
 \description{
 generate a SBM-distributed graph.

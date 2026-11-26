@@ -1,12 +1,22 @@
 Package: BayesCER
 Type: Package
-Title: Bayesian generalized Centered Erdős–Rényi model
+Title: Bayesian Generalized Centered Erdős–Rényi Model
 Version: 0.1.1
-Author: Francesco Barile
+Authors@R: c(
+    person("Francesco", "Barile",
+          email = "francesco.barile@unimib.it",
+          role = c("aut", "cre")),
+    person("Sara", "Capozio",
+          role = "aut"),
+    person("Bernardo", "Nipoti",
+          role = "aut")
+  )
 Maintainer: Francesco Barile <francesco.barile@unimib.it>
-Description: This package provides efficient C++ functions for the MLE of the 
-             alpha parameter in a CER-gCER model.
-             I need another sentence.
+Description: Provides Bayesian methods for modeling graph-valued data
+    through generalized centered Erdős–Rényi models. The package
+    implements Bayesian inference and computational procedures for
+    analyzing network data, including the computation of graph
+    summaries such as the clustering coefficient.
 License: LGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -21,4 +31,5 @@ Suggests:
     tidyverse,
     colorspace
 VignetteBuilder: knitr
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.1.1
+Roxygen: list(markdown = TRUE, roclets = c("rd", "namespace"))

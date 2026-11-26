@@ -7,11 +7,11 @@
 pretty_nonnegative(lim)
 }
 \arguments{
-\item{lim}{[numeric vector] A numeric vector of length two specifying the
+\item{lim}{\verb{[numeric vector]} A numeric vector of length two specifying the
 lower and upper limits of the range.}
 }
 \value{
-[numeric vector] A vector of pretty axis break values restricted
+\verb{[numeric vector]} A vector of pretty axis break values restricted
 to nonnegative values within the specified range.
 }
 \description{
