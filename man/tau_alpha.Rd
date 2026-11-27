@@ -2,27 +2,25 @@
 % Please edit documentation in R/functions.R
 \name{tau_alpha}
 \alias{tau_alpha}
-\title{Compute the tau transformation of alpha.
-\deqn{\tau(\alpha,n_0) = \frac{\alpha^{n_0}}
-{(1-\alpha)^{n_0}+\alpha^{n_0}}}
-which maps a probability parameter \eqn{\alpha} into the interval
-\eqn{(0,1/2)}.}
+\title{Compute the tau transformation of alpha.}
 \usage{
 tau_alpha(alpha, n_0)
 }
 \arguments{
-\item{alpha}{\verb{[numeric]} A probability parameter in the interval \eqn{(0,1/2)}.}
+\item{alpha}{A probability parameter in the interval
+\eqn{(0,1/2)}.}
 
-\item{n_0}{\verb{[numeric]} A positive exponent controlling the concentration
+\item{n_0}{A positive exponent controlling the concentration
 of the transformation and interpreted as prior sample size.}
 }
 \value{
-\verb{[numeric]} The value of \eqn{\tau(\alpha,n_0)}.
+The value of \eqn{\tau(\alpha,n_0)}.
 }
 \description{
-Compute the tau transformation of alpha.
-\deqn{\tau(\alpha,n_0) = \frac{\alpha^{n_0}}
+The transformation is defined as
+\deqn{\tau(\alpha,n_0) =
+\frac{\alpha^{n_0}}
 {(1-\alpha)^{n_0}+\alpha^{n_0}}}
-which maps a probability parameter \eqn{\alpha} into the interval
-\eqn{(0,1/2)}.
+and maps a probability parameter \eqn{\alpha} into
+the interval \eqn{(0,1/2)}.
 }

@@ -116,16 +116,19 @@ generate_sbm_fast <- function(N, K = 2, intra_prob = 0.8, inter_prob = 0.1,
 
 
 #' Compute the tau transformation of alpha.
-#' \deqn{\tau(\alpha,n_0) = \frac{\alpha^{n_0}}
+#'
+#' The transformation is defined as
+#' \deqn{\tau(\alpha,n_0) =
+#' \frac{\alpha^{n_0}}
 #' {(1-\alpha)^{n_0}+\alpha^{n_0}}}
-#' which maps a probability parameter \eqn{\alpha} into the interval
-#' \eqn{(0,1/2)}.
+#' and maps a probability parameter \eqn{\alpha} into
+#' the interval \eqn{(0,1/2)}.
 #'
-#' @param alpha `[numeric]` A probability parameter in the interval \eqn{(0,1/2)}.
-#' @param n_0 `[numeric]` A positive exponent controlling the concentration
-#' of the transformation and interpreted as prior sample size.
-#'
-#' @return `[numeric]` The value of \eqn{\tau(\alpha,n_0)}.
+#' @param alpha A probability parameter in the interval
+#'   \eqn{(0,1/2)}.
+#' @param n_0 A positive exponent controlling the concentration
+#'   of the transformation and interpreted as prior sample size.
+#' @return The value of \eqn{\tau(\alpha,n_0)}.
 tau_alpha <- function(alpha, n_0){
   out <- ( (alpha)^n_0 ) / ( (1 - alpha)^n_0 + (alpha)^n_0 )
   return(out)
